@@ -11,5 +11,7 @@ interface HolidayRequestRepositoryInterface
 
     public function getEmployeeHolidayRequests();
 
-    public function update(Request $request, $position);
+    public function updateDate(Request $request, $position);
+
+    public function approveHolidayRequest();
 }

@@ -35,5 +35,7 @@ class HolidayRequestRepository implements HolidayRequestRepositoryInterface
                     ->update(['fromDate' => $fromDate, 'toDate' => $toDate]);
     }
 
+    public function approveHolidayRequest() {}
+
     
 }
