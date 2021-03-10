@@ -25,10 +25,7 @@ class LogInController extends Controller
 
         } else {
             
-            return back()->withErrors([
-                'email' => 'The provided credentials do not match our records.',
-                'password' => 'Incorrect password.'
-            ]);
+            return Redirect::back()->withErrors(['Email or password incorrect!']);
         }
     }
 

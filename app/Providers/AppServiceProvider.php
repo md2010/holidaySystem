@@ -27,6 +27,16 @@ class AppServiceProvider extends ServiceProvider
             'App\Interfaces\HolidayRequestRepositoryInterface',
             'App\Repositories\HolidayRequestRepository'
         );
+
+        $this->app->bind(
+            'App\Interfaces\TeamLeaderRepositoryInterface',
+            'App\Repositories\TeamLeaderRepository'
+        );
+
+        $this->app->bind(
+            'App\Interfaces\TeamRepositoryInterface',
+            'App\Repositories\TeamRepository'
+        );
     }
 
     /**

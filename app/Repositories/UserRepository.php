@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Interfaces\UserRepositoryInterface;
-use App\Http\Resources\UserCollection;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 

@@ -12,7 +12,7 @@ class HolidayRequest extends Model
     use HasFactory;
 
     protected $fillable = [
-        'employee_id',
+        'user_id',
         'fromDate',
         'toDate',
         'status',

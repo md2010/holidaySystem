@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    <form method="post" action="{{ route('processEmployeeRequest') }}">
+    <form method="post" action="{{ route('processHolidayRequest') }}">
     @csrf 
         <label> From Date: </label> <br>
         <input type="date" id="4" name="fromDate"></input> <br><br>
@@ -15,7 +15,7 @@
         <input type="date" id="5" name="toDate"></input> <br><br>
 
         @if($errors->any())
-            <p> {{ $errors->first() }} </p>
+            <p style="color:red;"> {{ $errors->first() }} </p>
         @endif
 
         <input type="submit"  value="Send holiday request"> <br><br>

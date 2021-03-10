@@ -9,9 +9,13 @@ interface HolidayRequestRepositoryInterface
 {
     public function store($fromDate, $toDate);
 
-    public function getEmployeeHolidayRequests();
+    public function getHolidayRequests();
 
-    public function updateDate(Request $request, $position);
+    public function getTeamsHolidayRequests($IDs);
 
-    public function approveHolidayRequest();
+    public function updateDate(Request $request);
+
+    public function concludeHolidayRequest(Request $request, $position, $decision);
+
+    public function validateStatus($requestID);
 }

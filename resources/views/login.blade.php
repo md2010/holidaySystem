@@ -13,6 +13,11 @@
         <label> Password: </label> <br>
         <input type="password" id="2" name="password" class="form-control p_input"></input>
         <br> <br>
+
+        @if($errors->any())
+            <p style="color:red;"> {{ $errors->first() }} </p>
+        @endif
+
         <input class="btn btn-success" name="submit" type="submit" value="Log in">
     </form>
 </body>

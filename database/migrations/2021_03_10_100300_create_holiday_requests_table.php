@@ -11,7 +11,7 @@ class CreateHolidayRequestsTable extends Migration
     {
         Schema::create('holiday_requests', function (Blueprint $table) {
             $table->id();
-            $table->integer('employee_id');
+            $table->integer('user_id');
             $table->date('fromDate');
             $table->date('toDate');
             $table->string('status')->default('sent');

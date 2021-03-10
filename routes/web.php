@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogInController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\TeamLeaderController;
 use App\Http\Controllers\HolidayRequestController;
 
 //get routes
@@ -25,16 +26,37 @@ Route::get('/myHolidayRequests',
     ->middleware('auth')
     ->name('showHolidayRequests');
 
+Route::get('/teamLeader', 
+    [TeamLeaderController::class, 'index'])
+    ->name('teamLeader')
+    ->middleware('auth');
+
+Route::get('/teamLeader/members',
+    [TeamLeaderController::class, 'showTeamMembers'])
+    ->name('showTeamMembers')
+    ->middleware('auth');
+
+Route::get('/teamsHolidayRequests', 
+    [HolidayRequestController::class, 'showTeamsHolidayRequests'])
+    ->name('showTeamsHolidayRequests')
+    ->middleware('auth');
+
+
 
 //post routes
 Route::post('/auth', [LogInController::class, 'validateLogIn']);
 
-Route::post('/employee/processHolidayRequest', 
-    [HolidayRequestController::class, 'processEmployeeRequest'])
+Route::post('/processHolidayRequest', 
+    [HolidayRequestController::class, 'processHolidayRequest'])
     ->middleware('auth')
-    ->name('processEmployeeRequest');
+    ->name('processHolidayRequest');
 
 Route::post('/processHolidayRequestUpdate', 
     [HolidayRequestController::Class, 'processHolidayRequestUpdate'])
     ->middleware('auth')
     ->name('processHolidayRequestUpdate');
+
+Route::post('/processHolidayRequestDecision',
+    [HolidayRequestController::class, 'processHolidayRequestDecision'])
+    ->middleware('auth')
+    ->name('processHolidayRequestDecision');
