@@ -57,7 +57,7 @@ class HolidayRequestController extends Controller
     public function processHolidayRequestUpdate(Request $request)
     {
         $position = $this->employeeInterface->resolveUser();
-        $this->holidayRequestInterface->update($request, $position);
+        $this->holidayRequestInterface->updateDate($request, $position);
         return Redirect::to('/myHolidayRequests');
     }
     
