@@ -1,0 +1,27 @@
+table {
+    margin-left: 450px;
+    border: 5px solid  #333;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    text-align: center; 
+    width: 1200px;
+}
+
+thead th  {
+    background-color: cadetblue;
+    padding: 20px;
+    font-size: 20px;
+}
+
+tbody td {
+    border-bottom: 2px solid white;
+    padding: 5px;
+    font-size: 17px;
+    background-color:lavender;
+}
+
+body {
+    background-color: #333;
+}
+
+
