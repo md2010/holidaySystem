@@ -8,7 +8,7 @@ interface UserRepositoryInterface
 
     public function delete(int $id);
 
-    //public function update(int $id, mixed $data);
+    public function update(mixed $data);
 
     public function updateAttribute($attribute, mixed $value);
 
@@ -16,7 +16,10 @@ interface UserRepositoryInterface
 
     public function updateAvailableDays($value);
 
-    //public function create($data);
+    public function getTeamLeaders();
 
-    //public function save(mixed $data);
+    public function getLeaderManagerIDs();
+
+    public function getProjectManagers();
+
 }

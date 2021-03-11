@@ -18,4 +18,11 @@ interface HolidayRequestRepositoryInterface
     public function concludeHolidayRequest(Request $request, $position, $decision);
 
     public function validateStatus($requestID);
+
+    public function getByID($id);
+
+    public function getAll();
+
+    public function getUnresolvedForAdmin($IDs);
+
 }

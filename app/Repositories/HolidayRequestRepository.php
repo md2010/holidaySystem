@@ -21,7 +21,26 @@ class HolidayRequestRepository implements HolidayRequestRepositoryInterface
         $holidayRequest->save();
     }
 
-    public function getHolidayRequests()
+    public function getByID($id)
+    {
+        $request = HolidayRequest::findOrFail($requestID);
+        return $request;
+    }
+
+    public function getAll()
+    {
+        $requests = HolidayRequest::all();
+        return $requests;
+    }
+
+    public function getUnresolvedForAdmin($IDs)
+    {
+        $requests = HolidayRequest::whereIn('user_id', $IDs)->get();
+        $requests = $requests->where('status', 'sent');
+        return $requests;
+    }
+
+    public function getHolidayRequests() 
     {
         $requests = HolidayRequest::where('user_id', Auth::id())->get();
         return $requests;
@@ -63,7 +82,7 @@ class HolidayRequestRepository implements HolidayRequestRepositoryInterface
 
     public function validateStatus($requestID) 
     {
-        $request = HolidayRequest::find($requestID)->first();
+        $request = $this->getByID($requestID);
         if($request->teamLeaderApproval == 'APPROVED' && $request->projectManagerApproval == 'APPROVED') {
             HolidayRequest::where('id', $requestID)->update(['status' => 'APPROVED']); 
 

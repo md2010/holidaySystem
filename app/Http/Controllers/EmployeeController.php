@@ -4,21 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Interfaces\EmployeeRepositoryInterface;
+use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
 
 class EmployeeController extends Controller
 {
-    protected $employeeInterface;
+    protected $userInterface;
 
-    public function __construct(EmployeeRepositoryInterface $employeeInterface)
+    public function __construct(UserRepositoryInterface $userInterface)
     {
-        $this->employeeInterface = $employeeInterface;
+        $this->userInterface = $userInterface;
     }
 
     public function index()
     {
-        $employee = $this->employeeInterface->getByID(Auth::id());  
+        $employee = $this->userInterface->getByID(Auth::id());  
         return view('employee')->with('value', $employee);
     }
 

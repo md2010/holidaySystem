@@ -20,8 +20,7 @@ class HolidayRequestController extends Controller
         UserRepositoryInterface $userInterface, 
         HolidayRequestRepositoryInterface $holidayRequestInterface,
         TeamRepositoryInterface $teamInterface
-        )
-    {
+    ) {
         $this->userInterface = $userInterface;
         $this->holidayRequestInterface = $holidayRequestInterface;
         $this->teamInterface = $teamInterface;
@@ -53,16 +52,23 @@ class HolidayRequestController extends Controller
         $position = $this->userInterface->resolveUser();
 
         if($position == 'admin') {
-            //
+            $requests = $this->holidayRequestInterface->getAll();
+            return view('holidayRequestsAdmin')->with('requests', $requests);
         } else {
             $requests = $this->holidayRequestInterface->getHolidayRequests();
             return view('showHolidayRequests-employeeView')->with('requests', $requests);
         }     
     }
 
-    public function showTeamsHolidayRequests()
+    public function showHolidayRequestsForAdmin()
     {
-        $IDs = $this->teamInterface->getTeamMembersIDs();
+        $requests = $this->holidayRequestInterface->getUnresolvedForAdmin();
+
+    }
+
+    public function showTeamsHolidayRequests($team_id)
+    {
+        $IDs = $this->teamInterface->getTeamMembersIDs($team_id);
         $requests = $this->holidayRequestInterface->getTeamsHolidayRequests($IDs);
         return view('teamsHolidayRequests')->with('requests', $requests);
     }
@@ -73,14 +79,13 @@ class HolidayRequestController extends Controller
         return Redirect::to('/myHolidayRequests');
     }
 
-    public function processHolidayRequestDecision(Request $request)
+    public function processHolidayRequestDecision(Request $request, $requestID)
     {
-        $action = ($request->only('button')['button'] == "Approve") ? $decision = 'APPROVED' : $decision = 'REJECTED';
+        $decision = ($request->only('button')['button'] == "Approve") ? 'APPROVED' : 'REJECTED';
         $position = $this->userInterface->resolveUser();
-        $requestID = $request->only('id')["id"];
         $this->holidayRequestInterface->concludeHolidayRequest($requestID, $position, $decision);
 
-        return Redirect::to('/teamsHolidayRequests');
+        return Redirect::back();
     }
     
 }

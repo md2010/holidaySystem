@@ -63,11 +63,15 @@
     <input type="submit" value="View my holiday requests">
 </form> <br> 
 
-<form method="get" action="{{ route('showTeamMembers') }}">
+<form method="get" action="{{ route('showTeamInfo', $value->team_id) }}">
+    <input type="submit" value="Team info">
+</form> <br> 
+
+<form method="get" action="{{ route('showTeamMembers', $value->team_id) }}">
     <input type="submit" value="View my team">
 </form> <br>
 
-<form method="get" action="{{ route('showTeamsHolidayRequests') }}">
+<form method="get" action="{{ route('showTeamsHolidayRequests', $value->team_id) }}">
     <input type="submit" value="View team's holiday requests">
 </form> <br>
 

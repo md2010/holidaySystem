@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface TeamRepositoryInterface extends UserRepositoryInterface
+interface TeamRepositoryInterface 
 {
 
     public function getAll();
@@ -11,12 +11,20 @@ interface TeamRepositoryInterface extends UserRepositoryInterface
 
     public function getTeamIDByTeamLeader($teamLeader_id);
 
-    public function getTeamMembers();
+    public function getTeamMembers($team_id);
 
-    public function getTeamMembersIDs();
+    public function getTeamIDByProjectManager($projectManagerID_id);
 
-    //public function getTeamLeaderID();
+    public function getTeamLeaderID($teamID);
 
-    //public function getProjectManagerID();
+    public function getProjectManagerID($teamID);
+
+    public function getTeamMembersIDs($team_id);
+
+    public function delete($id);
+
+    public function update($data);
+
+    public function validateValues($data);
 
 }
