@@ -11,41 +11,41 @@ use App\Interfaces\HolidayRequestRepositoryInterface;
 
 class AdminController extends Controller
 {
-    protected $userInterface;
-    protected $teamInterface;
-    protected $holidayRequestInterface;
+    protected $userRepository;
+    protected $teamRepository;
+    protected $holidayRequestRepository;
 
     public function __construct(
-        UserRepositoryInterface $userInterface,
-        TeamRepositoryInterface $teamInterface,
-        HolidayRequestRepositoryInterface $holidayRequestInterface
+        UserRepositoryInterface $userRepository,
+        TeamRepositoryInterface $teamRepository,
+        HolidayRequestRepositoryInterface $holidayRequestRepository
     ) {
-        $this->userInterface = $userInterface;
-        $this->teamInterface = $teamInterface;
-        $this->holidayRequestInterface = $holidayRequestInterface;
+        $this->userRepository = $userRepository;
+        $this->teamRepository = $teamRepository;
+        $this->holidayRequestRepository = $holidayRequestRepository;
     }
 
     public function index()
     {
-        $admin = $this->userInterface->getByID(Auth::id());
+        $admin = $this->userRepository->getByID(Auth::id());
         return view('admin')->with('value', $admin);
     }
 
     public function showTeamLeaders()
     {
-        $leaders = $this->userInterface->getTeamLeaders();
+        $leaders = $this->userRepository->getTeamLeaders();
         return view('showManagersLeaders')->with('leader', $leaders);
     }
 
     public function showProjectManagers()
     {
-        $managers = $this->userInterface->getProjectManagers();
+        $managers = $this->userRepository->getProjectManagers();
         return view('showManagersLeaders')->with('leader', $managers);
     }
 
     public function showTeams()
     {
-        $teams = $this->teamInterface->getAll();
+        $teams = $this->teamRepository->getAll();
         return view('teamInfo')->with('team', $teams);
     }
 
@@ -53,10 +53,10 @@ class AdminController extends Controller
     {
         $action = $request->only('button')['button'];
         if($action == 'Delete') {
-            $this->userInterface->delete($request->only('data')['data'][0]);
+            $this->userRepository->delete($request->only('data')['data'][0]);
         } else {
-            $data = $request->input();
-            $this->userInterface->update($data);
+            $data = $request->except(['_token', 'button']);
+            $this->userRepository->update($data);
         }
         return Redirect::back();
 
@@ -66,21 +66,26 @@ class AdminController extends Controller
     {
         $action = $request->only('button')['button'];
         if($action == 'Delete') {
-            $this->teamInterface->delete( $request->only('data')['data'][0]);
+            $this->teamRepository->delete( $request->only('data')['data'][0]);
         } else {
-            $data = $request->input();
-            if(! $this->teamInterface->update($data)) {
+            $data = $request->except(['_token', 'button']);
+            if(! $this->teamRepository->update($data)) {
                 Redirect::back()->withErrors(['Team Leader ID or Project Manager ID not valid!']);
             }          
         }
         return Redirect::back();
     }
 
-    public function showHolidayRequestsForAdmin()
+    public function showNewEmployeeForm()
     {
-        $IDs = $this->userInterface->getLeaderManagerIDs();
-        $requests = $this->holidayRequestInterface->getUnresolvedForAdmin($IDs);
-        return view('holidayRequestsForAdmin')->with('requests', $requests);
+        return view('newEmployeeForm');
+    }
+
+    public function addNewEmployee(Request $request)
+    {
+        $data = $request->except(['_token', 'button']);
+        $this->userRepository->store($data);
+        Redirect::route('admin');
     }
 
 }

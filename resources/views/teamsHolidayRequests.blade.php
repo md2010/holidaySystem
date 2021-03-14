@@ -10,7 +10,7 @@
 <h2> Team's holiday requests </h2>
 
 @foreach ($requests as $e)
-    <form method="post" action="{{ route('processHolidayRequestDecision') }}">
+    <form method="post" action="{{ route('processHolidayRequestDecision', $e->id) }}">
     @csrf 
         <label> Request ID: </label> <br>
         <input type="text" id="1" name="id" value={{ $e->id }} readonly></input> <br><br>

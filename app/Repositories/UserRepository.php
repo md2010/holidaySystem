@@ -9,44 +9,22 @@ use App\Models\User;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function getByID($id)
+    public function getByID(int $id)
     {
         $employee = User::findOrFail($id);
         return $employee;
     }
 
-    public function getAvailableDays()
+    public function getByEmail(string $email) 
     {
-        $e = $this->getByID(Auth::id());
-        return $e->availableDays;
+        $user = User::where('email', $email)->first();
+        return $user;
     }
 
-    public function updateAvailableDays($value)
-    {
-        $id = Auth::id();
-        $e =  $this->getByID($id);
-        $e->availableDays -= $value;
-        $e->save();
-    }
-
-    public function updateAttribute($attribute, $value) 
-    {
-        $id = Auth::id();
-        $employee = $this->getByID($id);
-        $employee->$attribute = $value;
-        $employee->save();
-    }
-
-    public function delete($id)
+    public function delete(int $id)
     {
         $employee = User::findOrFail($id);
         $employee->delete();
-    }
-
-    public function resolveUser()
-    {
-        $e = $this->getByID(Auth::id());
-        return $e->position;
     }
 
     public function getTeamLeaders() 
@@ -61,21 +39,6 @@ class UserRepository implements UserRepositoryInterface
         return $managers;
     }
 
-    public function update($data)
-    {
-        User::where('id', $data['id'])
-                    ->update([
-                        'firstName' => $data['firstName'], 
-                        'lastName' => $data['lastName'],
-                        'email' => $data['email'],
-                        'position' => $data['position'],
-                        'passwordVisible' => $data['passwordVisible'],
-                        'password' => Hash::make($data['passwordVisible']),
-                        'team_id' => $data['team_id'],
-                        'availableDays' => $data['availableDays']
-            ]);
-    }
-
     public function getLeaderManagerIDs()
     {
         $IDs = User::where('position', 'teamLeader')
@@ -83,5 +46,33 @@ class UserRepository implements UserRepositoryInterface
             ->pluck('id');
         return $IDs;
     }
+
+    public function update(mixed $data) 
+    {
+        $user = $this->getByID($data['id']);
+
+        foreach($data as $key => $value) {
+            if($key == 'password') {
+                $user->$key = Hash::make($data['password']);
+            }
+           $user->$key = $value;
+           $user->save();
+        }
+    }
+
+    public function store(mixed $data)
+    {
+        $user = new User();
+        foreach($data as $key => $value) {
+            if($key == 'password') {
+                $user->$key = Hash::make($data['password']);
+            }
+            $user->$key = $value;
+        }
+
+        $user->availableDays = 20;
+        $user->save();
+    }
+
     
 }

@@ -12,18 +12,18 @@ use App\Interfaces\HolidayRequestRepositoryInterface;
 
 class HolidayRequestController extends Controller
 {
-    protected $userInterface;
-    protected $holidayRequestInterface;
-    protected $teamInterface;
+    protected $userRepository;
+    protected $holidayRequestRepository;
+    protected $teamRepository;
 
     public function __construct(
-        UserRepositoryInterface $userInterface, 
-        HolidayRequestRepositoryInterface $holidayRequestInterface,
-        TeamRepositoryInterface $teamInterface
+        UserRepositoryInterface $userRepository, 
+        HolidayRequestRepositoryInterface $holidayRequestRepository,
+        TeamRepositoryInterface $teamRepository
     ) {
-        $this->userInterface = $userInterface;
-        $this->holidayRequestInterface = $holidayRequestInterface;
-        $this->teamInterface = $teamInterface;
+        $this->userRepository = $userRepository;
+        $this->holidayRequestRepository = $holidayRequestRepository;
+        $this->teamRepository = $teamRepository;
     }
 
     public function showHolidayRequestForm()
@@ -31,17 +31,19 @@ class HolidayRequestController extends Controller
         return view('holidayRequestForm');
     }
 
-    public function processHolidayRequest(Request $request) 
+    public function processHolidayRequest(Request $request) //validate
     {
         $fromDate = new Datetime($request->only('fromDate')["fromDate"]);
         $toDate = new DateTime($request->only('toDate')["toDate"]);
-        $availableDays = $this->userInterface->getAvailableDays();       
+
+        $user = $this->userRepository->getByID(Auth::id());
+        $availableDays = $user->availableDays;       
         $days = ($fromDate->diff($toDate))->d;
         
         if ($days <= $availableDays) {
-            $this->userInterface->updateAvailableDays($days);
-            $this->holidayRequestInterface->store($fromDate, $toDate);
-            return Redirect::to('/'.$this->userInterface->resolveUser());          
+            $this->userRepository->update(['id' => Auth::id(), 'availableDays' => ($availableDays - $days)]);
+            $this->holidayRequestRepository->store($fromDate, $toDate);
+            return redirect()->route($user->position);           
         } else {
             return Redirect::back()->withErrors(['You do not have enough available days left!']);
         }
@@ -49,41 +51,38 @@ class HolidayRequestController extends Controller
 
     public function showHolidayRequests()
     {
-        $position = $this->userInterface->resolveUser();
+        $user = $this->userRepository->getByID(Auth::id());
 
-        if($position == 'admin') {
-            $requests = $this->holidayRequestInterface->getAll();
+        if($user->position == 'admin') {
+            $requests = $this->holidayRequestRepository->getAll();
             return view('holidayRequestsAdmin')->with('requests', $requests);
         } else {
-            $requests = $this->holidayRequestInterface->getHolidayRequests();
+            $requests = $this->holidayRequestRepository->getByUserID([$user->id]);
             return view('showHolidayRequests-employeeView')->with('requests', $requests);
         }     
     }
 
     public function showHolidayRequestsForAdmin()
     {
-        $requests = $this->holidayRequestInterface->getUnresolvedForAdmin();
-
+        $IDs = $this->userRepository->getLeaderManagerIDs();
+        $requests = $this->holidayRequestRepository->getByUserID($IDs);
+        $requests = $requests->where('status', 'sent');
+        return view('holidayRequestsForAdmin')->with('requests', $requests);
     }
 
     public function showTeamsHolidayRequests($team_id)
     {
-        $IDs = $this->teamInterface->getTeamMembersIDs($team_id);
-        $requests = $this->holidayRequestInterface->getTeamsHolidayRequests($IDs);
+        $IDs = $this->teamRepository->getTeamMembersIDs($team_id);
+        $requests = $this->holidayRequestRepository->getByUserID($IDs);
         return view('teamsHolidayRequests')->with('requests', $requests);
-    }
-
-    public function processHolidayRequestUpdate(Request $request)
-    {
-        $this->holidayRequestInterface->updateDate($request);
-        return Redirect::to('/myHolidayRequests');
     }
 
     public function processHolidayRequestDecision(Request $request, $requestID)
     {
         $decision = ($request->only('button')['button'] == "Approve") ? 'APPROVED' : 'REJECTED';
-        $position = $this->userInterface->resolveUser();
-        $this->holidayRequestInterface->concludeHolidayRequest($requestID, $position, $decision);
+        $user = $this->userRepository->getByID(Auth::id());
+        $position = $user->position;
+        $this->holidayRequestRepository->concludeHolidayRequest($requestID, $position, $decision);
 
         return Redirect::back();
     }

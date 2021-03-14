@@ -20,7 +20,6 @@ class UserFactory extends Factory
             'lastName' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,             
             'password' => Hash::make('password'.$counter),
-            'passwordVisible' => 'password'.$counter,
             'position' => $this->faker->randomElement(['admin', 'employee', 'teamLeader', 'projectManager']), 
             'availableDays' => 20         
         ];

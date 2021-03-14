@@ -19,7 +19,6 @@ class User extends Authenticatable
         'lastName',
         'email',
         'password',
-        'passwordVisible',
         'position',
         'availableDays',
         'team_id'

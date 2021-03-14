@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use App\Models\User;
+use App\Interfaces\UserRepositoryInterface;
 
 class LogInController extends Controller
 {
+    protected $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function showLogInForm()
     {
         return view('login');
@@ -20,8 +27,8 @@ class LogInController extends Controller
 
         if (auth()->attempt($credentials)) {
 
-            $user = User::where('email', $request->email)->first();
-            return Redirect::to('/'.$user->position); 
+            $user = $this->userRepository->getByEmail($request->email); //repository
+            return redirect()->route($user->position); 
 
         } else {
             

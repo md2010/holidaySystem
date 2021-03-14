@@ -27,9 +27,6 @@
         <label> Team Leader Approval: </label> <br>
         <input type="text" id="5" value={{ $e->teamLeaderApproval }} readonly></input> <br><br>
 
-        @if ($e->status == 'sent') 
-                <input type="submit" value="Edit">
-        @endif
         <br><br><br><br>
     </form>
 @endforeach

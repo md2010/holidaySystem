@@ -14,7 +14,6 @@ class CreateUsersTable extends Migration
             $table->string('lastName');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('passwordVisible');
             $table->string('position');
             $table->integer('availableDays');
             $table->string('team_id')->nullable();

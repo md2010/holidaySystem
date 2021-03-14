@@ -10,7 +10,7 @@ use App\Models\HolidayRequest;
 
 class HolidayRequestRepository implements HolidayRequestRepositoryInterface
 {
-    public function store($fromDate, $toDate)
+    public function store(DateTime $fromDate, DateTime $toDate)
     {
         $holidayRequest = HolidayRequest::create([
             'user_id' => Auth::id(),
@@ -21,9 +21,9 @@ class HolidayRequestRepository implements HolidayRequestRepositoryInterface
         $holidayRequest->save();
     }
 
-    public function getByID($id)
+    public function getByID(int $id)
     {
-        $request = HolidayRequest::findOrFail($requestID);
+        $request = HolidayRequest::findOrFail($id);
         return $request;
     }
 
@@ -33,61 +33,48 @@ class HolidayRequestRepository implements HolidayRequestRepositoryInterface
         return $requests;
     }
 
-    public function getUnresolvedForAdmin($IDs)
+    public function getByUserID($ID)
     {
-        $requests = HolidayRequest::whereIn('user_id', $IDs)->get();
-        $requests = $requests->where('status', 'sent');
+        $requests = HolidayRequest::whereIn('user_id', $ID)->get();
         return $requests;
     }
 
-    public function getHolidayRequests() 
+    public function update($data) 
     {
-        $requests = HolidayRequest::where('user_id', Auth::id())->get();
-        return $requests;
+        $request = $this->getByID($data['id']);
+
+        foreach($data as $key => $value) {
+           $request->$key = $value;
+           $request->save();
+        }
     }
 
-    public function getTeamsHolidayRequests($IDs)
+    public function concludeHolidayRequest(int $requestID, string $position, string $decision) 
     {
-        $requests = HolidayRequest::whereIn('user_id', $IDs)->get();
-        return $requests;
-    }
+        $request = $this->getByID($requestID);
 
-    public function updateDate(Request $request)
-    {       
-        $fromDate = new Datetime($request->only('fromDate')["fromDate"]);
-        $toDate = new DateTime($request->only('toDate')["toDate"]);
-        HolidayRequest::where('id', $request->only('id'))
-                    ->update(['fromDate' => $fromDate, 'toDate' => $toDate]);
-    }
-
-    public function concludeHolidayRequest($requestID, $position, $decision) 
-    {
         if($position == 'teamLeader') {
-            HolidayRequest::where('id', $requestID)
-                    ->update(['teamLeaderApproval' => $decision]);
+               $request->update(['id' => $requestID, 'teamLeaderApproval' => $decision]);
 
         } else if($position == 'projectManager') {
-            HolidayRequest::where('id', $requestID)
-                    ->update(['projectManagerApproval' => $decision]);
+                $request->update(['id' => $requestID, 'projectManagerApproval' => $decision]);
 
         } else if($position == 'admin') {
-            HolidayRequest::where('id', $requestID)
-                    ->update([
+                $request->update([
                         'teamLeaderApproval' => $decision, 
                         'projectManagerApproval' => $decision
             ]);
         } 
-        $this->validateStatus($requestID);
+        $this->validateStatus($request);
     }
 
-    public function validateStatus($requestID) 
+    public function validateStatus(HolidayRequest $request) 
     {
-        $request = $this->getByID($requestID);
         if($request->teamLeaderApproval == 'APPROVED' && $request->projectManagerApproval == 'APPROVED') {
-            HolidayRequest::where('id', $requestID)->update(['status' => 'APPROVED']); 
+            $request->update(['status' => 'APPROVED']); 
 
-        } else if($request->teamLeaderApproval == 'REJECTED' || $request->projectManagerApproval == 'REJECTED') {          
-            HolidayRequest::where('id', $requestID)->update(['status' => 'REJECTED']); 
+        } else if($request->teamLeaderApproval == 'REJECTED' || $request->projectManagerApproval == 'REJECTED') {        
+            $request->update(['status' => 'REJECTED']); 
         }
     }
 

@@ -24,19 +24,23 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/employee', [EmployeeController::class, 'index'])
     ->name('employee');
 
-    Route::get('/holidayRequestForm', 
+    Route::get('/holiday-request-form', 
     [HolidayRequestController::class, 'showHolidayRequestForm'])
-    ->name('showHolidayRequestForm');
+    ->name('holiday-request-form');
 
-    Route::get('/myHolidayRequests',
+    Route::get('/my-holiday-requests',
     [HolidayRequestController::class, 'showHolidayRequests'])
-    ->name('showHolidayRequests');
+    ->name('holiday-requests');
 
-    Route::get('/teamLeader', 
+    Route::get('/team-leader', 
     [ManagerLeaderController::class, 'index'])
     ->name('teamLeader');
 
-    Route::get('/teamInfo/{team_id}', 
+    Route::get('/team/{id}/teams-holiday-requests', 
+    [HolidayRequestController::class, 'showTeamsHolidayRequests'])
+    ->name('showTeamsHolidayRequests');   //error 404 ?????
+
+    Route::get('/team-info/{team_id}', 
     [ManagerLeaderController::class, 'showTeamInfo'])
     ->name('showTeamInfo');
 
@@ -44,11 +48,7 @@ Route::middleware(['auth'])->group(function () {
     [ManagerLeaderController::class, 'showTeamMembers'])
     ->name('showTeamMembers');
 
-    Route::get('/team/{$id}/teamsHolidayRequests', 
-    [HolidayRequestController::class, 'showTeamsHolidayRequests'])
-    ->name('showTeamsHolidayRequests');
-
-    Route::get('/projectManager', 
+    Route::get('/project-manager', 
     [ManagerLeaderController::class, 'index'])
     ->name('projectManager');
 
@@ -56,11 +56,11 @@ Route::middleware(['auth'])->group(function () {
     [AdminController::class, 'index'])
     ->name('admin');
 
-    Route::get('/admin/teamLeaders', 
+    Route::get('/admin/team-leaders', 
     [AdminController::class, 'showTeamLeaders'])
     ->name('showTeamLeaders');
 
-    Route::get('/admin/projectManagers', 
+    Route::get('/admin/project-managers', 
     [AdminController::class, 'showProjectManagers'])
     ->name('showProjectManagers');
 
@@ -71,32 +71,37 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/teams', [AdminController::class, 'showTeams'])
     ->name('showTeams');
 
-    Route::get('/admin/holidayRequests', [HolidayRequestController::class, 'showHolidayRequests'])
-    ->name('showHolidayRequestsAdmin');
-
-    Route::get('/admin/holidayRequests/unresolved', [AdminController::class, 'showHolidayRequestsForAdmin'])
+    Route::get('/admin/holiday-requests/unresolved', [HolidayRequestController::class, 'showHolidayRequestsForAdmin'])
     ->name('showHolidayRequestsForAdmin');
+
+    Route::get('/admin/new-employee-form',
+    [AdminController::class, 'showNewEmployeeForm'])
+    ->name('showNewEmployeeForm');
         
 
     //post routes
-    Route::post('/processHolidayRequest', 
+    Route::post('/process-holiday-request', 
     [HolidayRequestController::class, 'processHolidayRequest'])
     ->name('processHolidayRequest');
 
-    Route::post('/processHolidayRequestUpdate', 
+    Route::post('/process-holiday-request-update', 
     [HolidayRequestController::Class, 'processHolidayRequestUpdate'])
     ->name('processHolidayRequestUpdate');
 
-    Route::post('/processHolidayRequestDecision/{id}',
+    Route::post('/process-holiday-request-decision/{id}',
     [HolidayRequestController::class, 'processHolidayRequestDecision'])
     ->name('processHolidayRequestDecision');
 
-    Route::post('/admin/processButtonActionUser/{user_id}', 
+    Route::post('/admin/process-button-action-user/{user_id}', 
     [AdminController::class, 'processButtonActionUser'])
     ->name('processButtonActionUser');
 
-    Route::post('/admin/processButtonActionTeam/{team_id}', 
+    Route::post('/admin/process-button-action-team/{team_id}', 
     [AdminController::class, 'processButtonActionTeam'])
     ->name('processButtonActionTeam');
+
+    Route::post('/admin/add-new-employee', 
+    [AdminController::class, 'addNewEmployee'])
+    ->name('addNewEmployee');
 
 });

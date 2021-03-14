@@ -3,26 +3,23 @@
 namespace App\Interfaces;
 
 use Illuminate\Http\Request;
+use DateTime;
 use App\Models\HolidayRequest;
 
 interface HolidayRequestRepositoryInterface
 {
-    public function store($fromDate, $toDate);
+    public function store(DateTime $fromDate, DateTime $toDate);
 
-    public function getHolidayRequests();
+    public function getByUserID($IDs);  
 
-    public function getTeamsHolidayRequests($IDs);
+    public function update(array $data);
 
-    public function updateDate(Request $request);
+    public function concludeHolidayRequest(int $requestID, string $position, string $decision);
 
-    public function concludeHolidayRequest(Request $request, $position, $decision);
+    public function validateStatus(HolidayRequest $request);
 
-    public function validateStatus($requestID);
-
-    public function getByID($id);
+    public function getByID(int $id);
 
     public function getAll();
-
-    public function getUnresolvedForAdmin($IDs);
 
 }

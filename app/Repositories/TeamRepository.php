@@ -16,71 +16,70 @@ class TeamRepository extends UserRepository implements TeamRepositoryInterface
         return $teams;
     }
 
-    public function getByID($id)
+    public function getByID(int $id)
     {
         $team = Team::findOrFail($id);
         return $team;
     }
 
-    public function getTeamIDByTeamLeader($teamLeader_id)
+    public function getTeamIDByTeamLeader(int $teamLeader_id)
     {
         $leader = Team::where('teamLeaderID', $teamLeader_id)->first();
         $teamID = $leader->id;
         return $teamID;
     }
 
-    public function getTeamIDByProjectManager($projectManagerID_id)
+    public function getTeamIDByProjectManager(int $projectManager_id)
     {
         $manager = Team::where('projectManagerID', $projectManager_id)->first();
         $teamID = $manager->id;
         return $teamID;
     }
 
-    public function getTeamLeaderID($teamID)
+    public function getTeamLeaderID(int $teamID)
     {
         $teamLeaderID = (Team::where('id', $teamID))->teamLeaderID();
         return $teamLeaderID;
     }
 
-    public function getProjectManagerID($teamID)
+    public function getProjectManagerID(int $teamID)
     {
         $projectManagerID = (Team::where('id', $teamID))-projectManagerID();
         return $projectManagerID;
     }
 
-    public function getTeamMembers($team_id)
+    public function getTeamMembers(int $team_id)
     {
         $members = User::where('team_id', $team_id)->get();
         return $members;
     }
 
-    public function getTeamMembersIDs($team_id)
+    public function getTeamMembersIDs(int $team_id)
     {
         $IDs = (User::where('team_id', $team_id))->pluck('id');
         return $IDs;
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
         $employee = Team::findOrFail($id);
         $employee->delete();
     }
 
-    public function update($data)
+    public function update(mixed $data)
     {
         if($this->validateValues($data)) {
-            Team::where('id', $data['id'])
-                        ->update([
-                            'name' => $data['name'], 
-                            'projectManagerID' => $data['projectManagerID'],
-                            'teamLeaderID' => $data['teamLeaderID'],
-            ]);
+            $team = $this->getByID($data['id']);
+            foreach($data as $key => $value) {
+                $team->$key = $value;
+                $team->save();
+            }
             return true;
         } 
         return false;
     }
 
-    public function validateValues($data)
+    public function validateValues(mixed $data)
     {
         if(
             $this->resolveUser($data['projectManagerID']) == 'projectManager'

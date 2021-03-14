@@ -9,16 +9,16 @@ use App\Models\User;
 
 class EmployeeController extends Controller
 {
-    protected $userInterface;
+    protected $userRepository;
 
-    public function __construct(UserRepositoryInterface $userInterface)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
-        $this->userInterface = $userInterface;
+        $this->userRepository = $userRepository;
     }
 
     public function index()
     {
-        $employee = $this->userInterface->getByID(Auth::id());  
+        $employee = $this->userRepository->getByID(Auth::id());  
         return view('employee')->with('value', $employee);
     }
 

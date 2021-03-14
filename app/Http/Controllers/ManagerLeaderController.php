@@ -9,32 +9,32 @@ use App\Interfaces\TeamRepositoryInterface;
 
 class ManagerLeaderController extends Controller
 {
-    protected $userInterface;
-    protected $teamInterface;
+    protected $userRepository;
+    protected $teamRepository;
 
     public function __construct(
-        UserRepositoryInterface $userInterface,
-        TeamRepositoryInterface $teamInterface
+        UserRepositoryInterface $userRepository,
+        TeamRepositoryInterface $teamRepository
     ) {
-        $this->userInterface = $userInterface;
-        $this->teamInterface = $teamInterface;
+        $this->userRepository = $userRepository;
+        $this->teamRepository = $teamRepository;
     }
 
     public function index()
     {
-        $user = $this->userInterface->getByID(Auth::id());  
+        $user = $this->userRepository->getByID(Auth::id());  
         return view('Manager&Leader')->with('value', $user);
     }
 
     public function showTeamMembers($team_id)
     {          
-        $members = $this->teamInterface->getTeamMembers($team_id);      
+        $members = $this->teamRepository->getTeamMembers($team_id);      
         return view('showTeamMembers')->with('member', $members);
     }
 
     public function showTeamInfo($team_id)
     {
-        $teamInfo = $this->teamInterface->getByID($team_id);
+        $teamInfo = $this->teamRepository->getByID($team_id);
         return view('teamInfo')->with('team', array($teamInfo));
     }
 

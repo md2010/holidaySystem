@@ -55,11 +55,11 @@
     </tbody>
 </table>  
         
-<form method="get" action="{{ route('showHolidayRequestForm') }}">
+<form method="get" action="{{ route('holiday-request-form') }}">
     <input type="submit" value="Make new holiday request">
 </form> <br> 
 
-<form method="get" action="{{ route('showHolidayRequests') }}">
+<form method="get" action="{{ route('holiday-requests') }}">
     <input type="submit" value="View my holiday requests">
 </form> <br> 
 

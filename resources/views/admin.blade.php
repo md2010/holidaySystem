@@ -67,9 +67,14 @@
     <input type="submit" value="View teams">
 </form> <br>
 
-<form method="get" action="{{ route('showHolidayRequestsAdmin') }}">
+<form method="get" action="{{ route('holiday-requests') }}">
     <input type="submit" value="View holiday requests">
 </form> <br>
+
+<form method="get" action="{{ route('showNewEmployeeForm') }}">
+    <input type="submit" value="Add new employee">
+</form> <br>
+
 
 </body>
 </html>
