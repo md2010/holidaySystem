@@ -77,6 +77,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/new-employee-form',
     [AdminController::class, 'showNewEmployeeForm'])
     ->name('showNewEmployeeForm');
+
+    Route::get('/admin/new-team-form',
+    [AdminController::class, 'showNewTeamForm'])
+    ->name('showNewTeamForm');
         
 
     //post routes
@@ -103,5 +107,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/admin/add-new-employee', 
     [AdminController::class, 'addNewEmployee'])
     ->name('addNewEmployee');
+
+    Route::post('/admin/add-new-team', 
+    [AdminController::class, 'addNewTeam'])
+    ->name('addNewTeam');
 
 });

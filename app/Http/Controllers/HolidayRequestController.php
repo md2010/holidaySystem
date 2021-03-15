@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreHolidayRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use DateTime;
@@ -31,22 +32,18 @@ class HolidayRequestController extends Controller
         return view('holidayRequestForm');
     }
 
-    public function processHolidayRequest(Request $request) //validate
+    public function processHolidayRequest(StoreHolidayRequest $request) 
     {
-        $fromDate = new Datetime($request->only('fromDate')["fromDate"]);
-        $toDate = new DateTime($request->only('toDate')["toDate"]);
-
-        $user = $this->userRepository->getByID(Auth::id());
-        $availableDays = $user->availableDays;       
+        $validated = $request->validated();
+        $fromDate = new Datetime($this->validated()["fromDate"]);
+        $toDate = new DateTime($this->validated()["toDate"]); 
         $days = ($fromDate->diff($toDate))->d;
-        
-        if ($days <= $availableDays) {
-            $this->userRepository->update(['id' => Auth::id(), 'availableDays' => ($availableDays - $days)]);
-            $this->holidayRequestRepository->store($fromDate, $toDate);
-            return redirect()->route($user->position);           
-        } else {
-            return Redirect::back()->withErrors(['You do not have enough available days left!']);
-        }
+        $user = $this->userRepository->getByID(Auth::id());
+        $availableDays = $user->availableDays; 
+        $this->userRepository->update(['id' => Auth::id(), 'availableDays' => ($availableDays - $days)]);
+        $this->holidayRequestRepository->store($fromDate, $toDate);
+        return redirect()->route($user->position);           
+      
     }
 
     public function showHolidayRequests()

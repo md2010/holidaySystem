@@ -21,13 +21,13 @@ class LogInController extends Controller
         return view('login');
     }
 
-    public function validateLogIn(Request $request)
+    public function validateLogIn(Request $request)  
     {
         $credentials = $request->only('email', 'password');
 
         if (auth()->attempt($credentials)) {
 
-            $user = $this->userRepository->getByEmail($request->email); //repository
+            $user = $this->userRepository->getByEmail($request->email); 
             return redirect()->route($user->position); 
 
         } else {

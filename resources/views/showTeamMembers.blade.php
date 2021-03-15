@@ -28,7 +28,7 @@
         <label> Position: </label> <br>
         <input type="text" id="4" name="position" value={{ $tl->position }}></input> <br><br>
         <label> Password: </label> <br>
-        <input type="text" id="5" name="passwordVisible" value={{ $tl->passwordVisible }}></input> <br><br>
+        <input type="text" id="5" name="password" value={{ $tl->password }}></input> <br><br>
         <label> Team ID: </label> <br>
         <input type="text" id="6" name="team_id" value={{ $tl->team_id }}></input> <br><br>
         <label> Holiday (available): </label> <br>

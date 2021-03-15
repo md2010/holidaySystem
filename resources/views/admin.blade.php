@@ -75,6 +75,10 @@
     <input type="submit" value="Add new employee">
 </form> <br>
 
+<form method="get" action="{{ route('showNewTeamForm') }}">
+    <input type="submit" value="Add new team">
+</form> <br>
+
 
 </body>
 </html>

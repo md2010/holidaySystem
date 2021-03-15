@@ -25,6 +25,6 @@ interface TeamRepositoryInterface
 
     public function update(mixed $data);
 
-    public function validateValues(mixed $data);
+    public function store(mixed $data);
 
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreOrUpdateTeamRequest;
+use App\Http\Requests\StoreOrUpdateUserRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\UserRepositoryInterface;
@@ -49,11 +51,12 @@ class AdminController extends Controller
         return view('teamInfo')->with('team', $teams);
     }
 
-    public function processButtonActionUser(Request $request, $user_id)
+    public function processButtonActionUser(StoreOrUpdateUserRequest $request, $user_id)
     {
+        $validated = $request->validated();
         $action = $request->only('button')['button'];
         if($action == 'Delete') {
-            $this->userRepository->delete($request->only('data')['data'][0]);
+            $this->userRepository->delete($request->only('id')['id']);
         } else {
             $data = $request->except(['_token', 'button']);
             $this->userRepository->update($data);
@@ -62,7 +65,7 @@ class AdminController extends Controller
 
     }
 
-    public function processButtonActionTeam(Request $request, $team_id)
+    public function processButtonActionTeam(StoreOrUpdateTeamRequest $request, $team_id)
     {
         $action = $request->only('button')['button'];
         if($action == 'Delete') {
@@ -85,7 +88,19 @@ class AdminController extends Controller
     {
         $data = $request->except(['_token', 'button']);
         $this->userRepository->store($data);
-        Redirect::route('admin');
+        return redirect()->route('admin');
+    }
+
+    public function showNewTeamForm()
+    {
+        return view('newTeamForm');
+    }
+
+    public function addNewTeam(StoreOrUpdateTeamRequest $request)
+    {
+        $validated = $request->validated();       
+        $this->teamRepository->store($validated);
+        return redirect()->route('admin');
     }
 
 }

@@ -66,28 +66,23 @@ class TeamRepository extends UserRepository implements TeamRepositoryInterface
         $employee->delete();
     }
 
-    public function update(mixed $data)
+    public function store(mixed $data)
     {
-        if($this->validateValues($data)) {
-            $team = $this->getByID($data['id']);
-            foreach($data as $key => $value) {
-                $team->$key = $value;
-                $team->save();
-            }
-            return true;
-        } 
-        return false;
+        $team = new Team();
+        foreach($data as $key => $value) {
+            $team->$key = $value;
+        }
+        $team->save();      
     }
 
-    public function validateValues(mixed $data)
-    {
-        if(
-            $this->resolveUser($data['projectManagerID']) == 'projectManager'
-            && $this->resolveUser($data['teamLeaderID']) == 'teamLeader'
-        ) {
-            return true;
-        } 
-        return false;
+    public function update(mixed $data)
+    {    
+        $team = $this->getByID($data['id']);
+        foreach($data as $key => $value) {
+            $team->$key = $value;
+            $team->save();
+        }         
     }
-    
+
+
 }
