@@ -15,8 +15,13 @@
         <br> <br>
 
         @if($errors->any())
-            <p style="color:red;"> {{ $errors->first() }} </p>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li style="color:red;"> {{ $error }} </li>
+            @endforeach
+        </ul>
         @endif
+        <br>
 
         <input class="btn btn-success" name="submit" type="submit" value="Log in">
     </form>

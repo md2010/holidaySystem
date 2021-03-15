@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\AuthorizationRequest;
 use App\Interfaces\UserRepositoryInterface;
 
 class LogInController extends Controller
@@ -21,9 +22,9 @@ class LogInController extends Controller
         return view('login');
     }
 
-    public function validateLogIn(Request $request)  
+    public function validateLogIn(AuthorizationRequest $request)  
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->validated();
 
         if (auth()->attempt($credentials)) {
 
