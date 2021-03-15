@@ -35,8 +35,8 @@ class HolidayRequestController extends Controller
     public function processHolidayRequest(StoreHolidayRequest $request) 
     {
         $validated = $request->validated();
-        $fromDate = new Datetime($this->validated()["fromDate"]);
-        $toDate = new DateTime($this->validated()["toDate"]); 
+        $fromDate = new Datetime($request->validated()["fromDate"]);
+        $toDate = new DateTime($request->validated()["toDate"]); 
         $days = ($fromDate->diff($toDate))->d;
         $user = $this->userRepository->getByID(Auth::id());
         $availableDays = $user->availableDays; 
