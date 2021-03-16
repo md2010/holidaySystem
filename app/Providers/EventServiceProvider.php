@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Events\Registered;
+use App\Events\HolidayRequestStatus;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use App\Listeners\ValidateHolidayRequestStatus;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -18,6 +20,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        HolidayRequestStatus::class => [
+            ValidateHolidayRequestStatus::class,
+        ]
     ];
 
     /**

@@ -42,14 +42,13 @@
     <tbody>
         
         <tr>
-            <td>{{$value->id}}</td>
-            <td>{{$value->firstName}}</td>
-            <td>{{$value->lastName}}</td>
-            <td>{{$value->email}}</td>             
-            <td>{{$value->passwordVisible}}</td>
-            <td>{{$value->position}}</td>  
-            <td>{{$value->availableDays}}</td> 
-            <td>{{$value->team_id}}</td>            
+            <td>{{$value['id']}}</td>
+            <td>{{$value['firstName']}}</td>
+            <td>{{$value['lastName']}}</td>
+            <td>{{$value['email']}}</td>             
+            <td>{{$value['position']}}</td>  
+            <td>{{$value['availableDays']}}</td> 
+            <td>{{$value['team_id']}}</td>            
         </tr>
         
     </tbody>
@@ -63,15 +62,15 @@
     <input type="submit" value="View my holiday requests">
 </form> <br> 
 
-<form method="get" action="{{ route('showTeamInfo', $value->team_id) }}">
+<form method="get" action="{{ route('showTeamInfo', $value['team_id']) }}">
     <input type="submit" value="Team info">
 </form> <br> 
 
-<form method="get" action="{{ route('showTeamMembers', $value->team_id) }}">
+<form method="get" action="{{ route('showTeamMembers', $value['team_id']) }}">
     <input type="submit" value="View my team">
 </form> <br>
 
-<form method="get" action="{{ route('showTeamsHolidayRequests', $value->team_id) }}">
+<form method="get" action="{{ route('showTeamsHolidayRequests', $value['team_id']) }}">
     <input type="submit" value="View team's holiday requests">
 </form> <br>
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\TeamRepositoryInterface;
+use App\Http\Resources\UserResource;
 
 class ManagerLeaderController extends Controller
 {
@@ -20,16 +21,16 @@ class ManagerLeaderController extends Controller
         $this->teamRepository = $teamRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $user = $this->userRepository->getByID(Auth::id());  
-        return view('Manager&Leader')->with('value', $user);
+        $user = new UserResource($this->userRepository->getByID(Auth::id()));  
+        return view('Manager&Leader')->with('value', $user->toArray($request));
     }
 
-    public function showTeamMembers($team_id)
+    public function showTeamMembers(Request $request, $team_id)
     {          
-        $members = $this->teamRepository->getTeamMembers($team_id);      
-        return view('showTeamMembers')->with('member', $members);
+        $members = UserResource::collection($this->userRepository->getUsersInTeam($team_id));      
+        return view('showTeamMembers')->with('member', $members->toArray($request));
     }
 
     public function showTeamInfo($team_id)

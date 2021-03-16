@@ -33,23 +33,17 @@
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
-            <th>Password</th>
             <th style="text-align:center">Position</th>
-            <th>Holiday (available)</th>
-            <th>Team ID</th>
         </tr>
     </thead>
     <tbody>
         
         <tr>
-            <td>{{$value->id}}</td>
-            <td>{{$value->firstName}}</td>
-            <td>{{$value->lastName}}</td>
-            <td>{{$value->email}}</td>             
-            <td>{{$value->passwordVisible}}</td>
-            <td>{{$value->position}}</td>  
-            <td>{{$value->availableDays}}</td> 
-            <td>{{$value->team_id}}</td>            
+            <td>{{$value['id']}}</td>
+            <td>{{$value['firstName']}}</td>
+            <td>{{$value['lastName']}}</td>
+            <td>{{$value['email']}}</td>             
+            <td>{{$value['position']}}</td>            
         </tr>
         
     </tbody>

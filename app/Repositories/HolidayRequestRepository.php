@@ -49,15 +49,13 @@ class HolidayRequestRepository implements HolidayRequestRepositoryInterface
         }
     }
 
-    public function concludeHolidayRequest(int $requestID, string $position, string $decision) 
+    public function concludeHolidayRequest(HolidayRequest $request, string $position, string $decision) 
     {
-        $request = $this->getByID($requestID);
-
         if($position == 'teamLeader') {
-               $request->update(['id' => $requestID, 'teamLeaderApproval' => $decision]);
+               $request->update(['teamLeaderApproval' => $decision]);
 
         } else if($position == 'projectManager') {
-                $request->update(['id' => $requestID, 'projectManagerApproval' => $decision]);
+                $request->update(['projectManagerApproval' => $decision]);
 
         } else if($position == 'admin') {
                 $request->update([
@@ -65,18 +63,6 @@ class HolidayRequestRepository implements HolidayRequestRepositoryInterface
                         'projectManagerApproval' => $decision
             ]);
         } 
-        $this->validateStatus($request);
     }
-
-    public function validateStatus(HolidayRequest $request) 
-    {
-        if($request->teamLeaderApproval == 'APPROVED' && $request->projectManagerApproval == 'APPROVED') {
-            $request->update(['status' => 'APPROVED']); 
-
-        } else if($request->teamLeaderApproval == 'REJECTED' || $request->projectManagerApproval == 'REJECTED') {        
-            $request->update(['status' => 'REJECTED']); 
-        }
-    }
-
     
 }

@@ -10,6 +10,8 @@ use DateTime;
 use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\TeamRepositoryInterface;
 use App\Interfaces\HolidayRequestRepositoryInterface;
+use Event;
+use App\Events\HolidayRequestStatus;
 
 class HolidayRequestController extends Controller
 {
@@ -69,7 +71,7 @@ class HolidayRequestController extends Controller
 
     public function showTeamsHolidayRequests($team_id)
     {
-        $IDs = $this->teamRepository->getTeamMembersIDs($team_id);
+        $IDs = $this->userRepository->getUsersInTeam($team_id)->pluck('id');
         $requests = $this->holidayRequestRepository->getByUserID($IDs);
         return view('teamsHolidayRequests')->with('requests', $requests);
     }
@@ -79,8 +81,10 @@ class HolidayRequestController extends Controller
         $decision = ($request->only('button')['button'] == "Approve") ? 'APPROVED' : 'REJECTED';
         $user = $this->userRepository->getByID(Auth::id());
         $position = $user->position;
-        $this->holidayRequestRepository->concludeHolidayRequest($requestID, $position, $decision);
+        $holidayRequest = $this->holidayRequestRepository->getByID($requestID);
+        $this->holidayRequestRepository->concludeHolidayRequest($holidayRequest, $position, $decision);
 
+        Event::dispatch(new HolidayRequestStatus($holidayRequest));
         return Redirect::back();
     }
     

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Interfaces\UserRepositoryInterface;
 use App\Interfaces\TeamRepositoryInterface;
 use App\Interfaces\HolidayRequestRepositoryInterface;
+use App\Http\Resources\UserResource;
 
 class AdminController extends Controller
 {
@@ -27,22 +28,22 @@ class AdminController extends Controller
         $this->holidayRequestRepository = $holidayRequestRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $admin = $this->userRepository->getByID(Auth::id());
-        return view('admin')->with('value', $admin);
+        $admin = new UserResource($this->userRepository->getByID(Auth::id()));
+        return view('admin')->with('value', $admin->toArray($request));
     }
 
-    public function showTeamLeaders()
+    public function showTeamLeaders(Request $request)
     {
-        $leaders = $this->userRepository->getTeamLeaders();
-        return view('showManagersLeaders')->with('leader', $leaders);
+        $leaders = UserResource::collection($this->userRepository->getTeamLeaders());
+        return view('showManagersLeaders')->with('leader',  $leaders->toArray($request));
     }
 
-    public function showProjectManagers()
+    public function showProjectManagers(Request $request)
     {
-        $managers = $this->userRepository->getProjectManagers();
-        return view('showManagersLeaders')->with('leader', $managers);
+        $managers = UserResource::collection($this->userRepository->getProjectManagers());
+        return view('showManagersLeaders')->with('leader', $managers->toArray($request));
     }
 
     public function showTeams()

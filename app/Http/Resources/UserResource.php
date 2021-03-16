@@ -2,11 +2,11 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserCollection extends ResourceCollection
+class UserResource extends JsonResource
 {
-    //public $preserveKeys = true;
+    public $preserveKeys = true;
 
     public function toArray($request)
     {
@@ -15,7 +15,7 @@ class UserCollection extends ResourceCollection
             'firstName' => $this->firstName,
             'lastName' => $this->lastName,
             'email' => $this->email,
-            'passwordVisible' => $this->passwordVisible,
+            'password' => $this->password,
             'position' => $this->position,
             'availableDays' => $this->availableDays,
             'team_id' => $this->team_id

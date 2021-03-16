@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
+use App\Http\Resources\UserResource;
 
 class EmployeeController extends Controller
 {
@@ -16,10 +17,10 @@ class EmployeeController extends Controller
         $this->userRepository = $userRepository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $employee = $this->userRepository->getByID(Auth::id());  
-        return view('employee')->with('value', $employee);
+        $employee = new UserResource($this->userRepository->getByID(Auth::id()));  
+        return view('employee')->with('value', $employee->toArray($request));
     }
 
     

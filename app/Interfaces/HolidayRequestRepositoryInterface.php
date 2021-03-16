@@ -14,9 +14,9 @@ interface HolidayRequestRepositoryInterface
 
     public function update(array $data);
 
-    public function concludeHolidayRequest(int $requestID, string $position, string $decision);
+    public function concludeHolidayRequest(HolidayRequest $request, string $position, string $decision);
 
-    public function validateStatus(HolidayRequest $request);
+    //public function validateStatus(HolidayRequest $request);
 
     public function getByID(int $id);
 

@@ -4,11 +4,9 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\Auth;
 use App\Interfaces\TeamRepositoryInterface;
-use App\Interfaces\UserRepositoryInterface;
 use App\Models\Team;
-use App\Models\User;
 
-class TeamRepository extends UserRepository implements TeamRepositoryInterface 
+class TeamRepository implements TeamRepositoryInterface 
 {
     public function getAll()
     {
@@ -44,29 +42,17 @@ class TeamRepository extends UserRepository implements TeamRepositoryInterface
 
     public function getProjectManagerID(int $teamID)
     {
-        $projectManagerID = (Team::where('id', $teamID))-projectManagerID();
+        $projectManagerID = (Team::where('id', $teamID))->projectManagerID();
         return $projectManagerID;
-    }
-
-    public function getTeamMembers(int $team_id)
-    {
-        $members = User::where('team_id', $team_id)->get();
-        return $members;
-    }
-
-    public function getTeamMembersIDs(int $team_id)
-    {
-        $IDs = (User::where('team_id', $team_id))->pluck('id');
-        return $IDs;
     }
 
     public function delete(int $id)
     {
-        $employee = Team::findOrFail($id);
-        $employee->delete();
+        $team = Team::findOrFail($id);
+        $team->delete();
     }
 
-    public function store(mixed $data)
+    public function store(array $data)
     {
         $team = new Team();
         foreach($data as $key => $value) {
@@ -75,13 +61,13 @@ class TeamRepository extends UserRepository implements TeamRepositoryInterface
         $team->save();      
     }
 
-    public function update(mixed $data)
+    public function update(array $data)
     {    
         $team = $this->getByID($data['id']);
         foreach($data as $key => $value) {
-            $team->$key = $value;
-            $team->save();
-        }         
+            $team->$key = $value;          
+        }  
+        $team->save();       
     }
 
 

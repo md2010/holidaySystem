@@ -47,7 +47,7 @@ class UserRepository implements UserRepositoryInterface
         return $IDs;
     }
 
-    public function update(mixed $data) 
+    public function update(array $data) 
     {
         $user = $this->getByID($data['id']);
 
@@ -55,12 +55,12 @@ class UserRepository implements UserRepositoryInterface
             if($key == 'password') {
                 $user->$key = Hash::make($data['password']);
             }
-           $user->$key = $value;
-           $user->save();
+           $user->$key = $value;         
         }
+        $user->save();
     }
 
-    public function store(mixed $data)
+    public function store(array $data)
     {
         $user = new User();
         foreach($data as $key => $value) {
@@ -74,5 +74,10 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
     }
 
+    public function getUsersInTeam(int $team_id)
+    {
+        $members = User::where('team_id', $team_id)->get();
+        return $members;
+    }
     
 }

@@ -10,14 +10,16 @@ interface UserRepositoryInterface
 
     public function delete(int $id);
 
-    public function update(mixed $data); //array with keys values, must contain ID
+    public function update(array $data); //array with keys values, must contain ID
 
-    public function store(mixed $data);
+    public function store(array $data);
 
     public function getTeamLeaders();
 
     public function getLeaderManagerIDs();
 
     public function getProjectManagers();
+
+    public function getUsersInTeam(int $team_id);
 
 }
