@@ -11,7 +11,7 @@ class ValidateHolidayRequestStatus
 {
     public function __construct()
     {
-        //
+        
     }
 
     public function handle(HolidayRequestStatus $event)
